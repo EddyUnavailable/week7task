@@ -36,6 +36,8 @@ nav h1 {
   padding: 20px;
 }
 .ship_grid {
+  border: #333;
+  border-width: 10px;
   display: flex;
   flex-direction: column;
   background-color: aquamarine;

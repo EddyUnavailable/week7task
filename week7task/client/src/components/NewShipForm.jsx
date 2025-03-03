@@ -12,7 +12,7 @@ export default function NewShipForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(bookData),
+        body: JSON.stringify(ships),
       });
       const message = await result.json();
       console.log(message);
@@ -22,13 +22,14 @@ export default function NewShipForm() {
   }
 
   function handleChange(event) {
-    // update my state variable
-    // console.log({[event.target.name]: event.target.value})
-    setBookData({...bookData, [event.target.name]: event.target.value});
-    console.log(bookData);
+    setBookData({...ships, [event.target.name]: event.target.value});
+    console.log(ships);
   }
   return (
-    <div className="ship_grid">
+    <div
+      className="ship_grid"
+      style={{display: "flex", flexDirection: "collumn"}}
+    >
       <form onSubmit={handleSubmit}>
         <input
           name="name"
@@ -50,6 +51,7 @@ export default function NewShipForm() {
         />
         <input
           name="launch date"
+          type="date"
           placeholder="launch date"
           onChange={handleChange}
           required
