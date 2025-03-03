@@ -2,7 +2,7 @@ import express, {response} from "express";
 import dotenv from "dotenv";
 import pg from "pg";
 import cors from "cors";
-import {createClient} from "@supabase/supabase";
+import {createClient} from "@supabase/supabase-js";
 const app = express();
 import "dotenv/config";
 // env.config();
