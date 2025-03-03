@@ -1,19 +1,23 @@
 import express from "express";
-import dotenv from "dotenv";
-import pg from "pg";
 import cors from "cors";
-import {createClient} from "@supabase/supabase-js";
-const app = express();
-import "dotenv/config";
+import pg from "pg";
+import dotenv from "dotenv";
+// dotenv.config({path: join(__dirname, ".env")});
+// import "dotenv/config";
 // env.config();
-console.log("Hello world!");
+const app = express();
+dotenv.config();
 app.use(cors());
 app.use(express.json());
+const db = new pg.Pool({
+  connectionString: process.env.DB_CONN,
+});
 
-const PORT = process.env.PORT || 0.0.0.0
+import {createClient} from "@supabase/supabase-js";
 const supabaseUrl = "https://ecdllxbjyrmdglcntjdl.supabase.co";
 const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
+console.log(supabaseKey);
 
 // const fetchShips = async () => {
 //   try {
@@ -28,28 +32,31 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // fetchShips();
 
-app.get("/", async (_, response) => {
+app.get("/", (request, response) => {
+  response.json("Woahay! Its working!");
+});
+
+app.get("/ships", async (request, response) => {
   try {
     const {data, error} = await supabase.from("ships").select();
-    console.log(ships);
     return response.send(data);
   } catch (error) {
     return response.send({error});
   }
 });
 
-// app.get("/ships/:id", async (request, response) => {
-//   try {
-//     const { data, error } = await supabase
-//       .from("ships")
-//       .select()
-//       .eq("id", request.params.id)
-//     console.log(data);
-//     return response.send(data);
-//   } catch (error) {
-//     return response.send({ error });
-//   }
-// });
+app.get("/ships/:id", async (request, response) => {
+  try {
+    const {data, error} = await supabase
+      .from("ships")
+      .select()
+      .eq("id", request.params.id);
+    console.log(data);
+    return response.send(data);
+  } catch (error) {
+    return response.send({error});
+  }
+});
 
 // add stuff
 app.put("/ships/:id", async (request, response) => {
@@ -73,7 +80,7 @@ app.put("/ships/:id", async (request, response) => {
   }
 });
 
-//delete stuff
+// delete stuff
 app.delete("/ships/:id", async (request, response) => {
   try {
     const {data, error} = await supabase
@@ -90,9 +97,7 @@ app.delete("/ships/:id", async (request, response) => {
   }
 });
 
-app.listen(process.env.PORT, () =>
-  console.log(
-    new Date().toLocaleTimeString() +
-      `: Server is running on port ${process.env.PORT}...`
-  )
-);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
