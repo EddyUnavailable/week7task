@@ -2,134 +2,63 @@ import express from "express";
 import dotenv from "dotenv";
 import pg from "pg";
 import cors from "cors";
-
-// const port = process.env.PORT || 3000;
-
-// const supabase = createClient(supabaseUrl, supabaseKey);
-
+import {createClient} from "@supabase/supabase-js";
 const app = express();
+import "dotenv/config";
+// env.config();
+console.log("Hello world!");
 
-app.use(express.json());
-app.use(cors());
-dotenv.config();
+const port = process.env.PORT || 3000;
+const supabaseUrl = "https://ecdllxbjyrmdglcntjdl.supabase.co";
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-// const db = new pg.Pool({connectionString: process.env.DB_URL});
+console.log(process.env.SUPABASE_KEY);
 
-// app.get("https://ecdllxbjyrmdglcntjdl.supabase.co", (req, res) => {
-//   res.send("React");
-// });
-
-app.get("https://ecdllxbjyrmdglcntjdl.supabase.co", async (req, res) => {
-  try {
-    let {data, error} = await supabase.from("ships").select("*");
-    if (error) throw error;
-    res.status(200).json(data);
-  } catch (error) {
-    console.error("Error fetching dinosaurs:", error.message);
-    res.status(500).json({error: "Error fetching dinosaurs"});
-  }
-});
-// app.listen(3000, () => {
-//   console.log("server listening on port 3000");
-// });
-// // get all books
-// app.get("/books", async (req, res) => {
+// const fetchShips = async () => {
 //   try {
-//     // fetch my books
-//     // this is like bidmas from school, we wrap the await in ()'s so it finishes doing that before trying to get .rows()
-//     const books = (await db.query(`SELECT * FROM books`)).rows;
-//     res.status(200).json(books);
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
-
-// // get indvidual book
-// // /books/1 -> params are : {id: 1}
-// // /books/helllloo -> params are : {id: helllloo}
-// app.get("/books/:id", async (req, res) => {
-//   const {includes_genres} = req.query;
-//   const {id} = req.params;
-//   console.log(id);
-//   try {
-//     if (includes_genres == "true") {
-//       const bookInfoWithGenres = (
-//         await db.query(
-//           `
-//                     SELECT books.*, array_agg(genres.name) AS genres
-//                     FROM books
-//                     LEFT JOIN
-//                     book_genres ON books.id = book_genres.book_id
-//                     LEFT JOIN
-//                     genres ON book_genres.genre_id = genres.id
-//                     WHERE books.id = $1
-//                     GROUP BY books.id
-//                 `,
-//           [id]
-//         )
-//       ).rows[0];
-//       res.status(200).json(bookInfoWithGenres);
-//       return;
+//     let {data: ships, error} = await supabase.from("ships").select("id, name");
+//     if (ships) {
+//       console.log(ships);
 //     }
-
-//     const bookInfo = (await db.query(`SELECT * FROM books WHERE id = $1`, [id]))
-//       .rows;
-//     res.status(200).json(bookInfo);
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).send("Something went wrong");
+//   } catch (error) {
+//     console.log(error);
 //   }
-// });
+// };
 
-// // INSERT A NEW BOOK:
+// fetchShips();
 
-// app.post("/books", async (req, res) => {
-//   // we get all of the infromation about the book from the request.body
-//   const {title, author, description, quote, released, img_url} = req.body;
+// app.get("/", async (_, response) => {
 //   try {
-//     const data = await db.query(
-//       `
-//             INSERT INTO books
-//             (title, author, description, quote, released, img_url)
-//             VALUES
-//             ($1, $2, $3, $4, $5, $6)
-//             `,
-//       [title, author, description, quote, released, img_url]
-//     );
-//     res.status(200).json(data);
-//   } catch (err) {
-//     res.status(500).send(err.message);
+//     const {data, error} = await supabase.from("ships").select();
+//     console.log(data);
+//     return response.send(data);
+//   } catch (error) {
+//     return response.send({error});
 //   }
 // });
 
-// // DELETE ROUTE
-// app.delete("/books/:id", async (req, res) => {
+// app.get("/*/:id", async (req, res) => {
 //   try {
-//     // we can use the RETURNING * to get back the iniformation about the book we just deleted and send it to the client
-//     const deleteBook = await db.query(
-//       `DELETE FROM books WHERE id = $1 RETURNING *`,
-//       [req.params.id]
-//     );
-//     // this can be useful for displaying notifications to the client containg information about the deleted book.
-//     res.status(200).json({message: "Book deleted!", book: deleteBook.rows[0]});
-//   } catch (err) {
-//     res.status(500).send(err.message);
+//     const {data, error} = await supabase
+//       .from("ships")
+//       .select("*")
+//       .eq("id", req.params.id)
+//       .single();
+//     if (error) throw error;
+//     console.log(error);
+//     res.json(data);
+//   } catch (error) {
+//     res.status(500).json({error: error.message});
 //   }
 // });
 
-// app.get("/genres", async (req, res) => {
-//   try {
-//     const genres = (await db.query(`SELECT * FROM genres`)).rows;
-//     res.status(200).json(genres);
-//   } catch (err) {
-//     res.status(500).json({error: err.message});
-//   }
-// });
+let {data: ships, error} = await supabase.from("ships").select("name");
+console.log("name");
 
-// // we learned about array_agg
-// // join statement for the genres of a book aswell
-// // all the books or all the books + the genres
-
-app.listen(7070, () =>
-  console.log(`ヽ(｀Д´)⊃━☆ﾟ. * ･ ｡ﾟ, It's alive on PORT 7070`)
+app.listen(process.env.PORT, () =>
+  console.log(
+    new Date().toLocaleTimeString() +
+      `: Server is running on port ${process.env.PORT}...`
+  )
 );
