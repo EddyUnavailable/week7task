@@ -1,4 +1,4 @@
-import express, {response} from "express";
+import express from "express";
 import dotenv from "dotenv";
 import pg from "pg";
 import cors from "cors";
@@ -7,8 +7,10 @@ const app = express();
 import "dotenv/config";
 // env.config();
 console.log("Hello world!");
+app.use(cors());
+app.use(express.json());
 
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 0.0.0.0
 const supabaseUrl = "https://ecdllxbjyrmdglcntjdl.supabase.co";
 const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
@@ -26,7 +28,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // fetchShips();
 
-app.get("/ships", async (_, response) => {
+app.get("/", async (_, response) => {
   try {
     const {data, error} = await supabase.from("ships").select();
     console.log(ships);
