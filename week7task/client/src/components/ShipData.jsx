@@ -21,12 +21,12 @@ export default function ShipData() {
     }
   }
 
-  const { data, error } = await supabase
-  .from('ships')
-  .insert([
-    { some_column: 'someValue', other_column: 'otherValue' },
-  ])
-  .select()
+  // const { data, error } = await supabase
+  // .from('ships')
+  // .insert([
+  //   { some_column: 'someValue', other_column: 'otherValue' },
+  // ])
+  // .select()
 
   function handleChange(event) {
     // update my state variable
