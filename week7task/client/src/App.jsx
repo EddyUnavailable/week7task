@@ -7,12 +7,14 @@ import Contact from "./components/Contact";
 import Home from "./components/Home";
 import NewShipForm from "./components/NewShipForm";
 import NoPage from "./components/NoPage";
+import ShipData from "./components/ShipData";
 
 export default function App() {
   return (
     <main>
       <NavBar />
       <NewShipForm />
+      <ShipData />
       <Routes>
         <Route path={"/"} element={<p>Home</p>}></Route>
         <Route path={"blogs"} element={<Blogs />}></Route>
